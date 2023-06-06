@@ -422,7 +422,7 @@ func (d *Driver) Start() error {
 		)
 	case "socket_vmnet":
 		startCmd = append(startCmd,
-			"-device", fmt.Sprintf("virtio-net-pci,netdev=net0,mac=%s", d.MACAddress), "-netdev", "socket,id=net0,fd=3",
+			"-device", fmt.Sprintf("virtio-net-pci,netdev=net0,mac=%s", "4a:cc:4d:5:a9:8a"), "-netdev", "socket,id=net0,fd=3",
 		)
 	default:
 		return fmt.Errorf("unknown network: %s", d.Network)
