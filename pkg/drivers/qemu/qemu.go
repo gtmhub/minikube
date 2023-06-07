@@ -421,8 +421,9 @@ func (d *Driver) Start() error {
 			"-nic", fmt.Sprintf("user,model=virtio,hostfwd=tcp::%d-:22,hostfwd=tcp::%d-:2376,hostname=%s", d.SSHPort, d.EnginePort, d.GetMachineName()),
 		)
 	case "socket_vmnet":
+		d.MACAddress = "0x4a:cc:4d:5:a9:8a"
 		startCmd = append(startCmd,
-			"-device", fmt.Sprintf("virtio-net-pci,netdev=net0,mac=%s", "4a:cc:4d:5:a9:8a"), "-netdev", "socket,id=net0,fd=3",
+			"-device", fmt.Sprintf("virtio-net-pci,netdev=net0,mac=%s", d.MACAddress), "-netdev", "socket,id=net0,fd=3",
 		)
 	default:
 		return fmt.Errorf("unknown network: %s", d.Network)
@@ -476,6 +477,7 @@ func (d *Driver) Start() error {
 		getIP := func() error {
 			// QEMU requires MAC address with leading 0s
 			// But socket_vmnet writes the MAC address to the dhcp leases file with leading 0s stripped
+			d.MACAddress = "0x4a:cc:4d:5:a9:8a"
 			mac := pkgdrivers.TrimMacAddress(d.MACAddress)
 			d.IPAddress, err = pkgdrivers.GetIPAddressByMACAddress(mac)
 			if err != nil {
